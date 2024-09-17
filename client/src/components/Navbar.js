@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import meeshoLogo from '../assets/image/messhoLogo.png';
 import "../styles/Navbar.css";
@@ -10,7 +10,7 @@ const Navbar = () => {
   const cartItems = useSelector((state) => state.cart.cartItems);
   const [query, setQuery] = useState('');
   const dispatch = useDispatch();
-  // const navigate=useNavigate()
+  const navigate=useNavigate()
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -27,8 +27,9 @@ const Navbar = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    window.location.href = '/signin';  
+    localStorage.removeItem('loggedInUser');
+    // window.location.href = '/signin';  
+    navigate("/signin")
   };
   
   return (

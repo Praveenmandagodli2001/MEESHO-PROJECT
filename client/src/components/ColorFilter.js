@@ -5,8 +5,8 @@ import { setColorFilter } from '../actions/productActions';
 const ColorFilter = () => {
   const dispatch = useDispatch();
 
-  const handleColorChange = (color) => {
-    dispatch(setColorFilter({ color }));
+  const handleColorChange = (colors) => {
+    dispatch(setColorFilter({ colors }));
   };
 
   return (
@@ -38,7 +38,7 @@ const ColorFilter = () => {
                   className="form-check-input"
                   type="checkbox"
                   id="red"
-                  onChange={() => handleColorChange('red')}
+                  onChange={() => handleColorChange('Red')}
                 />
                 <label className="form-check-label" htmlFor="red">Red</label>
               </div>
@@ -47,7 +47,7 @@ const ColorFilter = () => {
                   className="form-check-input"
                   type="checkbox"
                   id="blue"
-                  onChange={() => handleColorChange('blue')}
+                  onChange={() => handleColorChange('Blue')}
                 />
                 <label className="form-check-label" htmlFor="blue">Blue</label>
               </div>
@@ -56,7 +56,7 @@ const ColorFilter = () => {
                   className="form-check-input"
                   type="checkbox"
                   id="green"
-                  onChange={() => handleColorChange('green')}
+                  onChange={() => handleColorChange('Green')}
                 />
                 <label className="form-check-label" htmlFor="green">Green</label>
               </div>
@@ -65,7 +65,7 @@ const ColorFilter = () => {
                   className="form-check-input"
                   type="checkbox"
                   id="black"
-                  onChange={() => handleColorChange('black')}
+                  onChange={() => handleColorChange('Black')}
                 />
                 <label className="form-check-label" htmlFor="black">Black</label>
               </div>

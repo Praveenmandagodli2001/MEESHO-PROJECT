@@ -64,7 +64,7 @@ const CartPage = () => {
                   <div className='col-md-8 d-flex align-items-center'>
                     <div className='d-flex flex-column align-items-start'>
                       <img
-                        src={item.image}
+                        src={item.images[0]}
                         alt={item.title}
                         style={{ width: "40px", height: "40px", cursor: "pointer" }}
                         onClick={() => handleImageClick(item)}

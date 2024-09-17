@@ -34,11 +34,11 @@ const GenderFilter = () => {
                     <div className="accordion-body">
                         {/* Checkbox Items */}
                         <div className="form-check mb-2">
-                            <input className="form-check-input" type="checkbox" id="men"  onChange={() => handleGenderChange('men')}/>
+                            <input className="form-check-input" type="checkbox" id="men"  onChange={() => handleGenderChange('Men')}/>
                             <label className="form-check-label" htmlFor="men">Men</label>
                         </div>
                         <div className="form-check mb-2">
-                            <input className="form-check-input" type="checkbox" id="women" onChange={() => handleGenderChange('women')}/>
+                            <input className="form-check-input" type="checkbox" id="women" onChange={() => handleGenderChange('Women')}/>
                             <label className="form-check-label" htmlFor="women">women</label>
                         </div>
                     </div>

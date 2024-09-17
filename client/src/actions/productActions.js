@@ -126,9 +126,9 @@ export const setGenderFilter = (gender) => ({
   }
 )
 
-export const setColorFilter = (color) => ({
+export const setColorFilter = (colors) => ({
   type: SET_COLOR_FILTER,
-  payload: color,
+  payload: colors,
 });
 
 

@@ -15,7 +15,7 @@ const ProductsCard = ({ product }) => {
     <Link className='text-decoration-none' to={{ pathname: "/details/" }} onClick={handleCurrentProduct}>
       <div className="product-card d-flex flex-column p-3" style={{ height: '340px', maxHeight: '350px' }}>
         <div className="product h-50">
-          <img src={product.image} alt="" className="img-fluid" style={{ height: '100%', objectFit: 'cover' }} />
+          <img src={product.images[0]} alt="" className="img-fluid" style={{ height: '100%', objectFit: 'cover' }} />
         </div>
 
         <div className="flex-grow-1 d-flex flex-column justify-content-between">
@@ -43,15 +43,15 @@ const ProductsCard = ({ product }) => {
 
 
           <div className="rating bg-success rounded-pill text-white w-25 my-2">
-            <span className="ps-1">{product.rate}</span>
+            <span className="ps-1">{product.rating}</span>
             <span style={{ fontSize: "0.5rem", marginRight: "-10px" }}>
               <i className="fa-solid fa-star"></i>
             </span>
           </div>
 
           <span style={{ fontSize: "0.7rem", color: "#666" }}>
-            {product.reviews}
-            <span className="ps-1">Reviews</span>
+            {product.z}
+            <span className="ps-1">{product.reviews} Reviews</span>
           </span>
         </div>
       </div>

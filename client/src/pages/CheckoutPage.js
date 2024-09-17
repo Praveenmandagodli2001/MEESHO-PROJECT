@@ -27,7 +27,7 @@ const CheckoutPage = () => {
           {cartItems.map((item) => (
             <div className="row border-bottom py-3" key={item.id}>
               <div className="col-md-9 d-flex">
-                <img src={item.image} alt={item.title} style={{ width: "40px", height: "40px",cursor:"pointer" }} 
+                <img src={item.images[0]} alt={item.title} style={{ width: "40px", height: "40px",cursor:"pointer" }} 
                  onClick={() => handleImageClick(item)}/>
                 <h6 className="ps-3">{item.title}</h6>
               </div>

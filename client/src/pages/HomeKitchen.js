@@ -4,7 +4,7 @@ import Navbar from "../components/Navbar"
 import HomeKitchenSection from '../components/TopSection';
 import { filterHomeKitchen } from '../actions/productActions';
 import FooterSection from '../components/FooterSection';
-const Tops = () => {
+const HomeKitchen = () => {
   const dispatch = useDispatch();
   const filteredProducts = useSelector(state => state.products.filteredProducts);
 
@@ -22,5 +22,5 @@ const Tops = () => {
       <FooterSection/>
   </> )}
 
-export default Tops
+export default HomeKitchen
 //  dispatch(filterSilkSarees());

@@ -68,3 +68,61 @@
     left: 10px;
   }
   
+
+
+
+
+
+
+
+
+
+
+  
+  .product-card-container {
+    width: 250px; /* Adjust to the desired width */
+    margin: auto;
+  }
+  
+  .product-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    background-color: #fff;
+  }
+  
+  .product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .product-details {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .product-title {
+    font-size: 0.9rem;
+    color: #777;
+  }
+  
+  .product-price {
+    color: black;
+  }
+  
+  .free-delivery {
+    font-size: 0.7rem;
+    color: #666;
+  }
+  
+  .product-rating {
+    font-size: 0.6rem;
+    color: white;
+  }
+  
+  .product-rating .rating-text {
+    margin-right: 4px;
+  }
+  

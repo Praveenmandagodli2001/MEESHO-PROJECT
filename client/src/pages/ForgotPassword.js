@@ -9,7 +9,7 @@ const ForgotPassword = () => {
 
     let handleSignUp=(e)=>{
         e.preventDefault()
-        axios.post("http://localhost:3001/user/forgotPassword",{email})
+        axios.post("http://localhost:3001/api/users/forgotPassword",{email})
         .then(result=>{
           if(result.data.status){
             alert("check your email for reset password link")

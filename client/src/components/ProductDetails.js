@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -7,7 +7,7 @@ import "../styles/ProductDetails.css";
 
 const ProductDetails = ({ product }) => {
     const dispatch = useDispatch();
-    const [mainImage, setMainImage] = useState(product.image);
+    const [mainImage, setMainImage] = useState(product.images);
 
     const handleBuyNow = () => {
         dispatch(addToCart(product));
@@ -17,6 +17,11 @@ const ProductDetails = ({ product }) => {
     const handleImageClick = (newImage) => {
         setMainImage(newImage);
     };
+
+    useEffect(()=>{
+        setMainImage(product?.images[0])
+         
+     },[product?.images])
 
     return (
         <>
@@ -28,26 +33,26 @@ const ProductDetails = ({ product }) => {
                         <div className="col-12 col-md-2 d-flex justify-content-center flex-md-column align-items-center ps-5 small-image-container">
     <div className="small-images mb-2 border">
         <img
-            src={product.image1}
+            src={product?.images[2]}
             alt="Small View 1"
             className="img-container"
-            onClick={() => handleImageClick(product.image1)}
+            onClick={() => handleImageClick(product?.images[2])}
         />
     </div>
     <div className="small-images mb-2">
         <img
-            src={product.image2}
+            src={product?.images[1]}
             alt="Small View 2"
             className="img-fluid"
-            onClick={() => handleImageClick(product.image2)}
+            onClick={() => handleImageClick(product?.images[1])}
         />
     </div>
     <div className="small-images mb-2">
         <img
-            src={product.image}
+            src={product?.images[0]}
             alt="Small View 3"
             className="img-fluid"
-            onClick={() => handleImageClick(product.image)}
+            onClick={() => handleImageClick(product?.images[0])}
         />
     </div>
 </div>
@@ -82,7 +87,7 @@ const ProductDetails = ({ product }) => {
 
                                 {/* Rating */}
                                 <div className="rating bg-success rounded-pill text-white mb-5 d-inline-block px-3">
-                                    <span>{product.rate}</span>
+                                    <span>{product.rating}</span>
                                     <span style={{ fontSize: '0.6rem', marginLeft: '3px' }}>
                                         <i className="fa-solid fa-star"></i>
                                     </span>
@@ -114,8 +119,6 @@ const ProductDetails = ({ product }) => {
                                     <h6>Product Details</h6>
                                     <p className="my-0" style={{ color: "#666" }}>Name: {product.title}</p>
                                     <p className="my-0" style={{ color: "#666" }}>Category: {product.category}</p>
-                                    <p className="my-0" style={{ color: "#666" }}>Language: {product.language}</p>
-                                    <p className="my-0" style={{ color: "#666" }}>Publish Year: {product.PublishYear}</p>
                                 </div>
                             </div>
                         </div>

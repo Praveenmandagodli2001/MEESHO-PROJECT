@@ -1,9 +1,10 @@
 const express= require("express")
 const dotenv=require("dotenv")
 const cors=require("cors") 
-const cookieParser=require("cookie-parser")
+// const cookieParser=require("cookie-parser")
 const userRoutes=require("./routes/userRoutes")
-const sellerRoutes = require('./routes/sellerRoutes.js');
+const productRoutes=require("./routes/productRoutes.js")
+// const sellerRoutes = require('./routes/sellerRoutes.js');
 const connectDb=require("./config/database")
 const app=express()
 app.use(express.json())
@@ -17,12 +18,12 @@ app.use(cors({
     credentials:true,
 }))
 
-app.use(cookieParser())
+// app.use(cookieParser())
 
 
 
-app.use("/user",userRoutes)
-app.use('/seller', sellerRoutes);
+app.use('/api/users',userRoutes)
+app.use('/api/products', productRoutes)
 
 
 app.listen(process.env.PORT,()=>console.log(`port is running on ${process.env.PORT}`))

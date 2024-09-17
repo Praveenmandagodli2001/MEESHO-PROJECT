@@ -1,31 +1,53 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 
 const SignIn = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('user'); // role to differentiate between user and seller
+  
 
-  axios.defaults.withCredentials = true;
-
-  const handleSignIn = (e) => {
-    e.preventDefault();
-
-    const endpoint = role === 'user' ? "http://localhost:3001/user/signin" : "http://localhost:3001/seller/signin";
-
-    axios.post(endpoint, { email, password })
-      .then(result => {
-        if (result.data.status) {
-          localStorage.setItem('token', result.data.token)
-          navigate("/");
+  let handleSubmit = async (e) =>{
+    e.preventDefault(); 
+    try {
+        const response = await fetch('http://localhost:3001/api/users/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: email,
+            password: password
+          }), 
+        });
+  
+        const data = await response.json();
+       
+        if (data.status === 'success') {
+            localStorage.setItem('loggedInUser', JSON.stringify(data.user))
+            alert("Login Successful!")
+            setTimeout(() => {
+                switch(data.user.usertype) {
+                    case 'user':
+                        navigate('/');
+                        break;
+                    case 'seller':
+                        navigate('/seller/dashboard');
+                        break;
+                    default:
+                        break;
+                }
+            }, 1000);
         } else {
-          console.log("Login failed:", result.data.message);
+          alert(data.message)
         }
-      }).catch(err => console.log("Error=======>", err));
-  };
+      } catch (error) {
+        console.error('Error logging in:', error);
+        alert("Error logging in. Please try again.")
+      }
+
+ }
 
   return (
     <>
@@ -35,11 +57,11 @@ const SignIn = () => {
           <div className="card login-form">
             <div className="card-body">
               <h5 className="card-title text-center">Login</h5>
-              <form onSubmit={handleSignIn}>
-                <div className="mb-3">
-                  <label htmlFor="role" className="form-label">Sign in as</label>
+              <form onSubmit={handleSubmit}>
+                {/* <div className="mb-3"> */}
+                  {/* <label htmlFor="role" className="form-label">Sign in as</label>
                   <select
-                    id="role"
+                    id="usertype"
                     className="form-select"
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
@@ -47,7 +69,7 @@ const SignIn = () => {
                     <option value="user">User</option>
                     <option value="seller">Seller</option>
                   </select>
-                </div>
+                </div> */}
 
                 <div className="mb-3">
                   <label htmlFor="email" className="form-label">Email</label>

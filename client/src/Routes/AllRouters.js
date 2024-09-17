@@ -25,6 +25,8 @@ import SignUp from '../pages/SignUp'
 import SignIn from '../pages/SignIn'
 import ForgotPassword from '../pages/ForgotPassword'
 import ResetPassword from "../pages/ResetPassword"
+import SellerDashboard from "../pages/SellerDashboard "
+import SellerViewProduct from "../pages/SellerViewProduct"
 const AllRouters = () => {
   return (<>
     <Routes>
@@ -54,6 +56,8 @@ const AllRouters = () => {
         <Route path='/signin' element={<SignIn />} />
         <Route path='/forgotPassword' element={<ForgotPassword />} />
         <Route path='/resetPassword/:token' element={<ResetPassword />} />
+        <Route path="/seller/dashboard" element={<SellerDashboard />} />
+        <Route path="/sellerViewProduct" element={<SellerViewProduct />} />
       </Route>
     </Routes>
   </>)

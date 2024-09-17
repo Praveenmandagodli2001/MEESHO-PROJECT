@@ -141,11 +141,11 @@ const productReducer = (state = initialState, action) => {
 
 
     case SET_COLOR_FILTER:
-      const { color } = action.payload;
+      const { colors } = action.payload;
       //toggling here
-      const selectedColors = state.selectedColors.includes(color)
-        ? state.selectedColors.filter(c => c !== color)
-        : [...state.selectedColors, color];
+      const selectedColors = state.selectedColors.includes(colors)
+        ? state.selectedColors.filter(c => c !== colors)
+        : [...state.selectedColors, colors];
       return { ...state, selectedColors };
 
     default:

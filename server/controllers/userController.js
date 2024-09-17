@@ -5,47 +5,60 @@ const User = require("../models/userModel")
 
 
 //signup logicsss
-let signup = async (req, res) => {
+let register = async (req, res) => {
+    try {
+        let { usertype, name, email, password } = req.body
 
-    const { name, email, password, role } = req.body
-    const user = await User.findOne({ email })
-    if (user) {
-        return res.status(400).json({ message: "user already exists" })
+        let salt = await bcrypt.genSalt(10)
+        password = await bcrypt.hash(password, salt)
+
+        let user = new User({ usertype, name, email, password })
+
+        await user.save()
+        res.send({ status: 'success', user })
+    } catch (error) {
+        res.send({ status: 'failed', message: error.message })
     }
 
-    const hashPassword = await bcrypt.hash(password, 10)
-    const newUser = new User({
-        name,
-        email,
-        password: hashPassword,
-        role
-    })
-    await newUser.save()
-    return res.json({ status: true, message: "record submit successfully" })
+}
+
+let login = async (req, res) => {
+    try {
+        let { email, password } = req.body
+        let user = await User.findOne({ "email": email })
+        if (!user) {
+            return res.status(400).json({ status: 'failed', message: 'User not found' });
+        }
+        let payload = { id: user.id }
+
+        let isValidPwd = await bcrypt.compare(password, user.password)
+        if (!isValidPwd) {
+            res.status(400).json({ status: 'failed', message: 'password not valid' })
+        }else {
+            jwt.sign(payload, process.env.KEY, (err, token) => {
+                if (err) throw err
+                user.token = token
+                res.status(201).json({ status: 'success', message: 'Loggedin successfully', user })
+            })
+
+        }
+    } catch (error) {
+        res.send({ status: 'failed', message: error.message })
+    }
+}
+
+let logout = async (req,res) =>{
+    res.json({ status:'success', message: 'Logged out successfully' });
+}
+
+let cart = async (req,res) =>{
+    res.json(req.user)
 }
 
 
 
-//signinnn logicsssss
-let signin = async (req, res) => {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
-    if (!user) {
-        return res.status(400).json({ status: false, message: "User is not registered" });
-    }
 
-    const validPassword = await bcrypt.compare(password, user.password);
-    if (!validPassword) {
-        return res.status(400).json({ status: false, message: "Password is incorrect" });
-    }
-
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.KEY, { expiresIn: "1h" });
-    res.cookie("token", token, { httpOnly: true, maxAge: 360000 });  
-    return res.status(200).json({ status: true, message: "Login successful", token });
-};
-
-
-//forgotPssword logicsssss
+// forgotPssword logicsssss
 let forgotPassword=async(req,res)=>{
     const {email}=req.body
     try{
@@ -101,5 +114,4 @@ let resetPassword=async(req,res)=>{
 
 
 
-
-module.exports = { signup, signin, forgotPassword, resetPassword }
+module.exports = { login, register,logout,cart,forgotPassword,resetPassword }

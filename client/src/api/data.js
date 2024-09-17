@@ -451,3 +451,20 @@ const Products=[
   ]
 
   export default Products
+
+
+
+// {/* <div className="mb-3 row">
+//               <label htmlFor="productColors" className="col-sm-3 col-form-label">Colors Available</label>
+//               <div className="col-sm-9">
+//                 <select multiple className="form-select" id="productColors" value={productColors} 
+//                  onChange={(e) => setProductColors([...e.target.selectedOptions].map(option => option.value))}>
+//                   <option value="Red">Red</option>
+//                   <option value="Blue">Blue</option>
+//                   <option value="Green">Green</option>
+//                   <option value="Yellow">Yellow</option>
+//                   <option value="Black">Black</option>
+//                   <option value="White">White</option>
+//                 </select>
+//               </div>
+//             </div> */}
