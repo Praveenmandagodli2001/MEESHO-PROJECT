@@ -1,5 +1,5 @@
 let Cart = require('../models/cart');
-// let stripe = require('stripe')(process.env.STRIPE_KEY);
+let stripe = require('stripe')(process.env.STRIPE_KEY);
 
 let cartAdd = async (req, res) => {
     try {
@@ -141,34 +141,71 @@ let removeFromCart = async (req, res) => {
     }
 };
 
-// Uncomment this section if Stripe functionality is required later
-// let makePayment = async (req, res) => {
-//     const { amount } = req.body; // Amount should be passed from client
-//     try {
-//         const session = await stripe.checkout.sessions.create({
-//             payment_method_types: ["card"],
-//             mode: "payment",
-//             line_items: [
-//                 {
-//                     price_data: {
-//                         currency: "INR",
-//                         product_data: {
-//                             name: 'Product Name',
-//                         },
-//                         unit_amount: amount * 100
-//                     },
-//                     quantity: 1,
-//                 }
-//             ],
-//             success_url: `http://localhost:3000/success/`,
-//             cancel_url: `http://localhost:3000/cancel`,
-//         }, { apiKey: process.env.STRIPE_KEY });
+    let makePayment = async (req,res) =>{
 
-//         res.json({ id: session.id });
-//     } catch (error) {
-//         console.error('Error creating Stripe session:', error.message);
-//         res.status(500).json({ error: 'An error occurred, please try again later.' });
-//     }
-// }
+    const { amount, cart } = req.body; 
+// console.log(amount);
 
-module.exports = { cartAdd, fetchCart, removeFromCart, decrementItem, incrementItem };
+    try {
+
+        const lineItems = cart.items.map((item)=>({
+            price_data:{
+                currency:"inr",
+                product_data:{
+                    name:item.details.name,
+                },
+                unit_amount:item.price*100,
+            },
+            quantity:item.quantity
+        }));
+
+        const shippingCharge = {
+            price_data: {
+                currency: "inr",
+                product_data: {
+                    name: "Shipping Charge",
+                },
+                unit_amount: 50 *100,
+            },
+            quantity: 1,
+        };
+        
+        
+        lineItems.push(shippingCharge);
+
+    const session = await stripe.checkout.sessions.create({
+    payment_method_types: ["card"],
+    mode: "payment",
+    line_items: lineItems,
+    success_url: `http://localhost:3000/success/`,
+    cancel_url: `http://localhost:3000/cancel`,
+  },{apiKey: process.env.STRIPE_KEY})
+      
+        res.json({ id: session.id });
+      } catch (error) {
+        console.error('Error creating Stripe session:', error.message);
+        res.status(500).json({ error: 'An error occurred, please try again later.', error });
+      }
+      
+
+}
+
+
+let fetchCartById = async (req, res) => {
+    try {
+        const { cartId } = req.body;
+
+        const cart = await Cart.findOne({ _id: cartId });
+
+        if (!cart) {
+            return res.status(404).json({ message: "Cart is empty" });
+        }
+
+        res.status(200).json({ status: 'success', message: 'Cart saved successufully', cart });
+    } catch (error) {
+        console.error('Error fetching cart:', error);
+        res.status(500).json({ message: "Failed to fetch cart" });
+    }
+}
+
+module.exports = { cartAdd, fetchCart, removeFromCart, decrementItem, incrementItem, makePayment, fetchCartById };

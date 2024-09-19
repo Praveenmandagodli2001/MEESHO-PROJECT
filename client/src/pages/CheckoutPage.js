@@ -1,54 +1,99 @@
-import React from 'react';
-import { useSelector,useDispatch } from 'react-redux';
-import Navbar from '../components/Navbar';
-import { useNavigate } from 'react-router-dom';
-import { setCurrentProduct } from '../actions/setCurrentProduct';
-const CheckoutPage = () => {
- let dispatch=useDispatch()
-  const cartItems = useSelector((state) => state.cart.cartItems);
-  const totalPrice = cartItems.reduce((acc, item) => acc + (item.price * (item.qty || 1)), 0);
-  const navigate = useNavigate();
-  const handlePlaceOrder = () => {
-    navigate('/billingPage');
-  };
+// import { useSelector } from "react-redux"
+import Navbar from "../components/Navbar"
+import { useEffect, useState } from "react"
 
 
-  let handleImageClick=(product)=>{
-    dispatch(setCurrentProduct(product));  
-    navigate(`/details/`);
-  }
-  return (
-    <div className="container mt-5">
-      <Navbar />
-      <h3 className="border-bottom py-2 mb-3">Checkout Details</h3>
-      <div className="row" style={{ marginTop: "50px" }}>
-        <div className="col-md-8">
-          <h4>Your Items</h4>
-          {cartItems.map((item) => (
-            <div className="row border-bottom py-3" key={item.id}>
-              <div className="col-md-9 d-flex">
-                <img src={item.images[0]} alt={item.title} style={{ width: "40px", height: "40px",cursor:"pointer" }} 
-                 onClick={() => handleImageClick(item)}/>
-                <h6 className="ps-3">{item.title}</h6>
-              </div>
-              <div className="col-md-1 text-end">{item.price.toFixed(1)}</div>
-              <div className="col-md-1 text-end">{item.qty || 1}</div>
-              <div className="col-md-1 text-end">{(item.price * (item.qty || 1)).toFixed(1)}</div>
+
+function Orders() {
+
+
+
+    let [cart, setCart] = useState()
+    let [cartItems, setCartItems] = useState([])
+
+
+    useEffect(() => {
+
+        fetch('http://localhost:3001/api/order/fetchOrderByUserId', {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization':localStorage.getItem('userToken')
+            },
+            body: JSON.stringify({
+                userId: JSON.parse(localStorage.getItem('loggedInUser'))._id
+            })
+        }).then((res) => res.json())
+            .then((data) => {
+                if (data.status === 'success') {
+                    fetch('http://localhost:3001/api/cart/fetchCartById', {
+                        method: "POST",
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization':localStorage.getItem('userToken')
+                           
+                        },
+                        body: JSON.stringify({
+                            cartId: data.order.cart_id
+                        })
+                    }).then((res) => res.json())
+                        .then((res) => {
+                            if (res.status === 'success') {
+                                setCart(res.cart)
+                                setCartItems(res.cart.items)
+                            }
+                            // console.log(cart)
+                            // console.log(cartItems);
+
+
+                        }).catch((err) => console.log(err))
+                }
+            }).catch((err) => console.log(err))
+
+
+    }, [])
+    console.log("hhhhhhhhh",localStorage.getItem('userToken'));
+
+    return (
+        <>
+            <Navbar />
+            <div className="container mt-4" >
+                <div className="row mb-4 py-4 " >
+                    {cartItems.map(item => (
+
+
+                        <div className="row border py-4" key={item._id}>
+                            <div className='col-md-5 d-flex'>
+                                <img src={item.details.image} alt={item.details.title} style={{ width: "80px", height: "80px" }} />
+                                <div>
+                                    <h6 className='ps-3'>{item.details.name}</h6>
+                                    <h4 className='ms-5 btn-light btn'>quantity : {item.quantity}</h4>
+                                    {/* <span>quantity:{item.quantity}</span> */}
+                                </div>
+
+
+                            </div>
+
+
+                            <div className='col-md-1'>
+                                <p className='text-center rounded-pill text-muted'>ready for delivery</p>
+                            </div>
+
+
+
+
+
+                        </div>
+                    ))}
+
+
+
+                    <hr />
+                </div>
             </div>
-          ))}
-        </div>
-        <div className="col-md-4">
-          <div className="shadow p-4">
-            <h4>Order Summary</h4>
-            <p>Subtotal: {totalPrice.toFixed(2)}</p>
-            <p>Delivery Charges: Free</p>
-            <h5>Total: {totalPrice.toFixed(2)}</h5>
-            <button className="btn btn-primary"onClick={handlePlaceOrder}>Place Order</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
-export default CheckoutPage;
+        </>
+    )
+}
+
+export default Orders

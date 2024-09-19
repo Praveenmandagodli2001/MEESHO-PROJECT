@@ -5,6 +5,7 @@ const cors=require("cors")
 const userRoutes=require("./routes/userRoutes")
 const productRoutes=require("./routes/productRoutes.js")
 const cartRoutes=require("./routes/cartRoutes.js")
+const orderRoutes=require("./routes/orderRoutes.js")
 // const sellerRoutes = require('./routes/sellerRoutes.js');
 const connectDb=require("./config/database")
 const app=express()
@@ -26,6 +27,7 @@ app.use(cors({
 app.use('/api/users',userRoutes)
 app.use('/api/products', productRoutes)
 app.use('/api/cart',cartRoutes)
+app.use('/api/order',orderRoutes)
 
 
 app.listen(process.env.PORT,()=>console.log(`port is running on ${process.env.PORT}`))

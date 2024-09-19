@@ -27,6 +27,8 @@ import ForgotPassword from '../pages/ForgotPassword'
 import ResetPassword from "../pages/ResetPassword"
 import SellerDashboard from "../pages/SellerDashboard "
 import SellerViewProduct from "../pages/SellerViewProduct"
+import Success from '../pages/Success'
+import Cancel from '../pages/cancel'
 const AllRouters = () => {
   return (<>
     <Routes>
@@ -58,6 +60,8 @@ const AllRouters = () => {
         <Route path='/resetPassword/:token' element={<ResetPassword />} />
         <Route path="/seller/dashboard" element={<SellerDashboard />} />
         <Route path="/sellerViewProduct" element={<SellerViewProduct />} />
+        <Route path="/success" element={<Success/>} />
+        <Route path="/cancel" element={<Cancel/>} />
       </Route>
     </Routes>
   </>)

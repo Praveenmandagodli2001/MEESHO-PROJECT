@@ -44,7 +44,7 @@ const CartPage = () => {
 
 
   const handleCheckout = () => {
-    navigate('/checkoutPage'); 
+    navigate('/billingPage'); 
   };
 
   const handleImageClick = async (productId) => {                   

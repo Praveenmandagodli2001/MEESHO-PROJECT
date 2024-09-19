@@ -6,7 +6,7 @@ import "../styles/Navbar.css";
 const SellerNavbar1 = () => {
 let navigate=useNavigate()
   const handleLogout = () => {
-    localStorage.removeItem('loggedInUser');
+    localStorage.clear('loggedInUser');
     setTimeout(() =>{
         navigate('/')
 },1000)  
