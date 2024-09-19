@@ -1,27 +1,72 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from './Navbar';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { addToCart } from '../actions/CartActions';
+import { addToCart, updateCartCount } from '../actions/CartActions';
 import "../styles/ProductDetails.css";
 
 const ProductDetails = ({ product }) => {
     const dispatch = useDispatch();
     const [mainImage, setMainImage] = useState(product.images);
+    let [selectedSize, setSelectedSize] = useState('')
+    let navigate=useNavigate()
 
-    const handleBuyNow = () => {
+    const handleBuyNow = async() => {
+        if (!selectedSize) {
+            alert("Please select a size before adding to the cart")
+            return;
+        }
+
+        let loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'))
+        if(loggedInUser){
+
+             // dispatch(AddToCart({ ...product, selectedSize }));
+        fetch('http://localhost:3001/api/cart/cartAdd',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({
+                userId: loggedInUser._id,
+                productId: product._id,
+                quantity:1,
+                size:selectedSize,
+                product,
+                price:product.price
+            })
+        }).then(res=> res.json()).then((data) => {
+            if(data.status === 'success'){
+                alert(data.message)
+                dispatch(updateCartCount(data.cart.items.length))
+            }else{
+                alert(data.message)
+            }
+        })
+
+        }else{
+            navigate('/signin')
+        }
+
         dispatch(addToCart(product));
         alert("Item added to the cart");
     };
 
+
+
+    let handleSizeSelection = (size) => {
+        setSelectedSize(size)
+    }
     const handleImageClick = (newImage) => {
         setMainImage(newImage);
     };
 
-    useEffect(()=>{
+    useEffect(() => {
         setMainImage(product?.images[0])
-         
-     },[product?.images])
+
+    }, [product?.images])
+
+
+    
 
     return (
         <>
@@ -31,31 +76,31 @@ const ProductDetails = ({ product }) => {
                     <div className="row">
                         {/* Small Images */}
                         <div className="col-12 col-md-2 d-flex justify-content-center flex-md-column align-items-center ps-5 small-image-container">
-    <div className="small-images mb-2 border">
-        <img
-            src={product?.images[2]}
-            alt="Small View 1"
-            className="img-container"
-            onClick={() => handleImageClick(product?.images[2])}
-        />
-    </div>
-    <div className="small-images mb-2">
-        <img
-            src={product?.images[1]}
-            alt="Small View 2"
-            className="img-fluid"
-            onClick={() => handleImageClick(product?.images[1])}
-        />
-    </div>
-    <div className="small-images mb-2">
-        <img
-            src={product?.images[0]}
-            alt="Small View 3"
-            className="img-fluid"
-            onClick={() => handleImageClick(product?.images[0])}
-        />
-    </div>
-</div>
+                            <div className="small-images mb-2 border">
+                                <img
+                                    src={product?.images[2]}
+                                    alt="Small View 1"
+                                    className="img-container"
+                                    onClick={() => handleImageClick(product?.images[2])}
+                                />
+                            </div>
+                            <div className="small-images mb-2">
+                                <img
+                                    src={product?.images[1]}
+                                    alt="Small View 2"
+                                    className="img-fluid"
+                                    onClick={() => handleImageClick(product?.images[1])}
+                                />
+                            </div>
+                            <div className="small-images mb-2">
+                                <img
+                                    src={product?.images[0]}
+                                    alt="Small View 3"
+                                    className="img-fluid"
+                                    onClick={() => handleImageClick(product?.images[0])}
+                                />
+                            </div>
+                        </div>
 
 
                         {/* Main Image */}
@@ -80,7 +125,7 @@ const ProductDetails = ({ product }) => {
                                     <h6 style={{ color: "#666" }}>{product.title}</h6>
                                     <p className="text-success">
                                         <span id="price" className="fw-bold fs-4 text-dark">
-                                            <i className="fa-solid fa-indian-rupee-sign"></i>{product.price}
+                                            Rs{product.price}
                                         </span>
                                     </p>
                                 </div>
@@ -104,15 +149,22 @@ const ProductDetails = ({ product }) => {
                                 </div>
 
                                 {/* Size Selection */}
-                                <div className="item-info-parent border rounded ps-2 my-3">
-                                    <h6>Selecting Size</h6>
-                                    <div className="size-buttons d-flex gap-2 mt-2">
-                                        <button className="btn btn-outline-dark rounded-pill">S</button>
-                                        <button className="btn btn-outline-dark rounded-pill">M</button>
-                                        <button className="btn btn-outline-dark rounded-pill">L</button>
-                                        <button className="btn btn-outline-dark rounded-pill">XL</button>
+                                <div className="card mt-4">
+                                    <div className="card-body">
+                                        <h3 className="card-title">Select Size</h3>
+                                        {product.sizes.map((el, i) => (
+                                            <span
+                                                key={i}
+                                                className={`btn rounded-btn m-2 ${el === selectedSize ? 'btn-secondary' : 'btn-outline-secondary'}`}
+                                                style={{ borderRadius: "40px" }}
+                                                onClick={() => handleSizeSelection(el)}
+                                            >
+                                                {el}
+                                            </span>
+                                        ))}
                                     </div>
                                 </div>
+
 
                                 {/* Product Details */}
                                 <div className="item-info-parent border rounded-2 ps-2 my-3">

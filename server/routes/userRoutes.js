@@ -10,8 +10,6 @@ router.post('/login',login)
 router.post('/logout',logout)
 router.post('/cart',verify_token,cart)
 
-
-
 router.post("/forgotPassword", forgotPassword);
 router.post("/resetPassword/:token", resetPassword);
 

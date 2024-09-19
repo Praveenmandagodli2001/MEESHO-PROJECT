@@ -42,62 +42,62 @@ const productReducer = (state = initialState, action) => {
     case FILTER_SAREES:
       return {
         ...state,
-        filteredProducts: state.products.filter(product => product.categoryy === 'saree'),
+        filteredProducts: state.products.filter(product => product.subCategory === 'saree'),
       };
     case FILTER_SILK_SAREES:
       return {
         ...state,
-        filteredProducts: state.products.filter(product => product.type === 'silksaree'),
+        filteredProducts: state.products.filter(product => product.subCategory === 'silksaree'),
       };
     case FILTER_DRESSES:
       return {
         ...state,
-        filteredProducts: state.products.filter(product => product.category === 'dresses'),
+        filteredProducts: state.products.filter(product => product.subCategory === 'dresses'),
       };
     case FILTER_TOPS:
       return {
         ...state,
-        filteredProducts: state.products.filter(product => product.category === 'tops'),
+        filteredProducts: state.products.filter(product => product.subCategory === 'tops'),
       };
     case FILTER_T_SHIRT:
       return {
         ...state,
-        filteredProducts: state.products.filter(product => product.category === 'tshirt'),
+        filteredProducts: state.products.filter(product => product.subCategory === 'tshirts'),
       };
     case FILTER_JEANS:
       return {
         ...state,
-        filteredProducts: state.products.filter(product => product.category === 'menjeans'),
+        filteredProducts: state.products.filter(product => product.subCategory === 'menjeans'),
       };
     case FILTER_KIDS_DRESSES:
       return {
         ...state,
-        filteredProducts: state.products.filter(product => product.category === 'kidsdress'),
+        filteredProducts: state.products.filter(product => product.subCategory === 'kidsdress'),
       };
     case FILTER_WATCHES:
       return {
         ...state,
-        filteredProducts: state.products.filter(product => product.category === 'kidswatches'),
+        filteredProducts: state.products.filter(product => product.subCategory === 'kidswatches'),
       };
     case FILTER_HOME_KITCHEN:
       return {
         ...state,
-        filteredProducts: state.products.filter(product => product.category === 'homekitchen'),
+        filteredProducts: state.products.filter(product => product.subCategory === 'homekitchen'),
       };
     case FILTER_FACE:
       return {
         ...state,
-        filteredProducts: state.products.filter(product => product.category === 'face'),
+        filteredProducts: state.products.filter(product => product.subCategory === 'face'),
       };
     case FILTER_BEDSHEETS:
       return {
         ...state,
-        filteredProducts: state.products.filter(product => product.category === 'bedsheets'),
+        filteredProducts: state.products.filter(product => product.subCategory === 'bedsheets'),
       };
     case FILTER_SANITIZERS:
       return {
         ...state,
-        filteredProducts: state.products.filter(product => product.category === 'sanitizers'),
+        filteredProducts: state.products.filter(product => product.subCategory === 'sanitizers'),
       };
     case FILTER_All_Bags:
       return {

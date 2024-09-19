@@ -1,25 +1,33 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import Navbar from "../components/Navbar"
-import { filterTshirts } from '../actions/productActions';
+import React, { useEffect, useState } from 'react';
+import Navbar from "../components/Navbar";
 import FooterSection from '../components/FooterSection';
 import TshirtsSection from '../components/TshirtsSection';
+
 const TShirts = () => {
-  const dispatch = useDispatch();
-  const filteredProducts = useSelector(state => state.products.filteredProducts);
+  // State to store fetched products
+  const [productsList, setProductsList] = useState([]);
 
+  // Fetch products on component mount
   useEffect(() => {
-    dispatch(filterTshirts());
-  }, [dispatch]);
+    fetch('http://localhost:3001/api/products/getProducts')
+      .then((res) => res.json())
+      .then((data) => setProductsList(data.products))
+      .catch((err) => console.log(err));
+  }, []);
 
-  return (<>
-  <Navbar/>
-    <div style={{ marginTop: "150px" }}>
-      <h5 className='ps-4'>Silk Sarees</h5>
-       
-        <TshirtsSection products={filteredProducts}/>
+  // Filter products by subCategory 'tshirts'
+  const filteredTshirts = productsList.filter(product => product.subCategory === 'tshirts');
+
+  return (
+    <>
+      <Navbar />
+      <div style={{ marginTop: "150px" }}>
+        <h5 className='ps-4'>T-Shirts</h5>
+        <TshirtsSection products={filteredTshirts} />
       </div>
-      <FooterSection/>
-  </> )}
+      <FooterSection />
+    </>
+  );
+};
 
-export default TShirts
+export default TShirts;

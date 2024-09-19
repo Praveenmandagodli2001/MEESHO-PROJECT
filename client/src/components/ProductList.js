@@ -1,20 +1,8 @@
-import React, { useEffect } from 'react';       
-import { useDispatch, useSelector } from 'react-redux';
-import { fetchProducts } from '../actions/productActions';
+import React from 'react';
 import ProductsCard from './ProductsCard';
 import Sidebar from './Sidebar'; // Import Sidebar component
 
-const ProductList = () => {
-  const dispatch = useDispatch();
-  const filteredProducts = useSelector(state => state.products.filteredProducts);
-
-  useEffect(() => {
-    dispatch(fetchProducts());
-  }, [dispatch]);
-
-
-  
-
+const ProductList = ({ products }) => {
   return (
     <div className="container-fluid my-4">
       <div className="row">
@@ -26,7 +14,7 @@ const ProductList = () => {
         {/* Product Grid on the right */}
         <div className="col-md-9">
           <div className="row">
-            {filteredProducts.map(product => (
+            {products.map(product => (
               <div className="col-lg-3 col-md-4 col-sm-6 mb-4" key={product.id}>
                 <ProductsCard product={product} />
               </div>
@@ -39,4 +27,3 @@ const ProductList = () => {
 };
 
 export default ProductList;
-//sarree product list it is

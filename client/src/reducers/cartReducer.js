@@ -1,4 +1,4 @@
-import { ADD_TO_CART, REMOVE_FROM_CART, INCREMENT_QTY, DECREMENT_QTY } from '../actions/CartActions';
+import { ADD_TO_CART, REMOVE_FROM_CART, INCREMENT_QTY, DECREMENT_QTY, UPDATE_CART_COUNT } from '../actions/CartActions';
 
 const loadCartFromLocalStorage = () => {
   const cartItems = localStorage.getItem('cartItems');
@@ -40,13 +40,24 @@ const cartReducer = (state = initialState, action) => {
       };
     case DECREMENT_QTY:
       const updatedCartDec = state.cartItems.map(item =>
-        item.id === action.payload && (item.qty || 1) > 1 ? { ...item, qty: (item.qty || 1) - 1 } : item
+        item.id === action.payload && item.qty > 1 ? { ...item, qty: item.qty - 1 } : item
       );
       saveCartToLocalStorage(updatedCartDec);
       return {
         ...state,
         cartItems: updatedCartDec,
       };
+
+
+      case UPDATE_CART_COUNT:{
+        const updatedState={
+          ...state,
+          cartCounter : action.payload.cartCount
+        }
+        localStorage.setItem("cart", JSON.stringify(updatedState));
+  
+        return updatedState
+      }
     default:
       return state;
   }

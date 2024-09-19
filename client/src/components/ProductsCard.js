@@ -24,8 +24,8 @@ const ProductsCard = ({ product }) => {
           </div>
 
           <div className="price fs-5" style={{ color: "black" }}>
-            <i className="fa-solid fa-indian-rupee-sign"></i>
-            {product.price}
+            {/* <i className="fa-solid fa-indian-rupee-sign"></i> */}
+           Rs {product.price}
             <span style={{ fontSize: "0.6rem", color: "#777", paddingLeft: "4px" }}>onwards</span>
           </div>
 
@@ -50,7 +50,7 @@ const ProductsCard = ({ product }) => {
           </div>
 
           <span style={{ fontSize: "0.7rem", color: "#666" }}>
-            {product.z}
+            {/* {product.z} */}
             <span className="ps-1">{product.reviews} Reviews</span>
           </span>
         </div>

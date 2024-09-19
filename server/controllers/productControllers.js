@@ -33,6 +33,24 @@ let getProducts = async (req,res) =>{
 
     }
 }
+
+
+let getProductById = async (req,res) =>{
+  try{
+    // console.log(req.body);
+    
+      let product = await Product.findOne({_id: req.body.productId})
+      res.json({success:true,product})
+
+  }
+  catch{
+      console.log(error)
+      res.json({success:false,message:error.message})
+
+
+  }
+}
+
 let getProductsOfSeller = async (req,res) =>{
     try{
         let products = await Product.find({seller_id: req.body.loggedInUser._id})
@@ -45,4 +63,4 @@ let getProductsOfSeller = async (req,res) =>{
   }
 }
 
-module.exports = {addProducts,getProducts, getProductsOfSeller}
+module.exports = {addProducts,getProducts, getProductsOfSeller,getProductById}

@@ -1,26 +1,39 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import Navbar from "../components/Navbar"
+import React, { useEffect, useState } from 'react';
+import Navbar from '../components/Navbar';
 import WatchesSection from '../components/WatchesSection';
-import { filterWatches } from '../actions/productActions';
 import FooterSection from '../components/FooterSection';
-const Tops = () => {
-  const dispatch = useDispatch();
-  const filteredProducts = useSelector(state => state.products.filteredProducts);
+
+const Watches = () => {
+  const [productsList, setProductsList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(filterWatches());
-  }, [dispatch]);
+    fetch('http://localhost:3001/api/products/getProducts')
+      .then((res) => res.json())
+      .then((data) => setProductsList(data.products))
+      .catch((err) => console.log(err));
+  }, []);
 
-  return (<>
-  <Navbar/>
-    <div style={{ marginTop: "150px" }}>
-      <h5 className='ps-4'>Silk Sarees</h5>
-       
-        <WatchesSection products={filteredProducts}/>
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+    setTimeout(() => {
+      setLoading(false);
+    }, 400);
+  }, [loading]);
+
+  // Filter products by subCategory 'watches'
+  const filteredWatches = productsList.filter(product => product.subCategory === 'watches');
+
+  return (
+    <>
+      <Navbar />
+      <div style={{ marginTop: "150px" }}>
+        <h5 className='ps-4'>Watches</h5>
+        <WatchesSection products={filteredWatches} />
       </div>
-      <FooterSection/>
-  </> )}
+      <FooterSection />
+    </>
+  );
+};
 
-export default Tops
-//  dispatch(filterSilkSarees());
+export default Watches;

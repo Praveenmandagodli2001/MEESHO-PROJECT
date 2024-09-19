@@ -1,25 +1,39 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import Navbar from "../components/Navbar"
-import { filterbedsheets} from '../actions/productActions';
-import FooterSection from '../components/FooterSection';
+import React, { useEffect, useState } from 'react';
+import Navbar from '../components/Navbar';
 import BedSheetsSection from '../components/BedSheetsSection';
+import FooterSection from '../components/FooterSection';
+
 const Bedsheets = () => {
-  const dispatch = useDispatch();
-  const filteredProducts = useSelector(state => state.products.filteredProducts);
+  const [productsList, setProductsList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(filterbedsheets());
-  }, [dispatch]);
+    fetch('http://localhost:3001/api/products/getProducts')
+      .then((res) => res.json())
+      .then((data) => setProductsList(data.products))
+      .catch((err) => console.log(err));
+  }, []);
 
-  return (<>
-  <Navbar/>
-    <div style={{ marginTop: "150px" }}>
-      <h5 className='ps-4'>Silk Sarees</h5>
-       
-        <BedSheetsSection products={filteredProducts}/>
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+    setTimeout(() => {
+      setLoading(false);
+    }, 400);
+  }, [loading]);
+
+  // Filter products by subCategory 'bedsheets'
+  const filteredBedsheets = productsList.filter(product => product.subCategory === 'bedsheets');
+
+  return (
+    <>
+      <Navbar />
+      <div style={{ marginTop: "150px" }}>
+        <h5 className='ps-4'>Bed Sheets</h5>
+        <BedSheetsSection products={filteredBedsheets} />
       </div>
-      <FooterSection/>
-  </> )}
+      <FooterSection />
+    </>
+  );
+};
 
-export default Bedsheets
+export default Bedsheets;

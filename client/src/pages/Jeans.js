@@ -1,26 +1,38 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import Navbar from "../components/Navbar"
+import React, { useEffect, useState } from 'react';
+import Navbar from '../components/Navbar';
 import JeansSections from '../components/JeansSections';
-import { filterJeans } from '../actions/productActions';
 import FooterSection from '../components/FooterSection';
+
 const Jeans = () => {
-  const dispatch = useDispatch();
-  const filteredProducts = useSelector(state => state.products.filteredProducts);
+  const [productsList, setProductsList] = useState([]);
+  const [loading, setLoading] = useState([]);
+  useEffect(() => {
+    fetch('http://localhost:3001/api/products/getProducts')
+      .then((res) => res.json())
+      .then((data) => setProductsList(data.products))
+      .catch((err) => console.log(err));
+  }, []);
+
 
   useEffect(() => {
-    dispatch(filterJeans());
-  }, [dispatch]);
+    window.scrollTo({ top: 0 });
+    setTimeout(() => {
+      setLoading(false);
+    }, 400);
+  },[loading])
+  // Filter products by subCategory 'jeans'
+  const filteredJeans = productsList.filter(product => product.subCategory === 'menjeans');
 
-  return (<>
-  <Navbar/>
-    <div style={{ marginTop: "150px" }}>
-      <h5 className='ps-4'>Silk Sarees</h5>
-       
-        <JeansSections products={filteredProducts}/>
+  return (
+    <>
+      <Navbar />
+      <div style={{ marginTop: "150px" }}>
+        <h5 className='ps-4'>Jeans</h5>
+        <JeansSections products={filteredJeans} />
       </div>
-      <FooterSection/>
-  </> )}
+      <FooterSection />
+    </>
+  );
+};
 
-export default Jeans
-//  dispatch(filterSilkSarees());
+export default Jeans;
