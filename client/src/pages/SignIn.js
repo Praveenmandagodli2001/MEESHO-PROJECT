@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import { Link, useNavigate } from 'react-router-dom';
+import {updateCartCount} from "../actions/CartActions"
+import { useDispatch } from "react-redux";
 
 const SignIn = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const dispatch = useDispatch()
+
   
 
   let handleSubmit = async (e) =>{
@@ -15,6 +19,7 @@ const SignIn = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization':localStorage.getItem('userToken'),
           },
           body: JSON.stringify({
             email: email,
@@ -26,7 +31,11 @@ const SignIn = () => {
        
         if (data.status === 'success') {
             localStorage.setItem('loggedInUser', JSON.stringify(data.user))
+            localStorage.setItem('userToken', data.token)
             alert("Login Successful!")
+            if(data.UserCart){
+              dispatch(updateCartCount(data.userCart?.items?.length))
+          }
             setTimeout(() => {
                 switch(data.user.usertype) {
                     case 'user':

@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 const nodemailer=require("nodemailer")
 const User = require("../models/userModel")
+let Cart = require('../models/cart')
 
 
 //signup logicsss
@@ -29,16 +30,18 @@ let login = async (req, res) => {
         if (!user) {
             return res.status(400).json({ status: 'failed', message: 'User not found' });
         }
-        let payload = { id: user.id }
+        
 
         let isValidPwd = await bcrypt.compare(password, user.password)
         if (!isValidPwd) {
             res.status(400).json({ status: 'failed', message: 'password not valid' })
         }else {
-            jwt.sign(payload, process.env.KEY, (err, token) => {
+            let payload = { _id: user._id }
+            jwt.sign(payload, process.env.KEY, async(err, token) => {
                 if (err) throw err
-                user.token = token
-                res.status(201).json({ status: 'success', message: 'Loggedin successfully', user })
+                let UserCart = await Cart.findOne({userId:user.id})
+                // user.token = token
+                res.status(201).json({ status: 'success', message: 'Loggedin successfully', user,token, UserCart })
             })
 
         }

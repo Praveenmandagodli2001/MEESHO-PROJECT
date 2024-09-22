@@ -1,39 +1,37 @@
 
 let Order = require('../models/orders')
 
+
 let orderAdd = async (req,res) =>{
     try {
-        const { fullname, address, email, city, modeOfPayment,pincode, userId } = req.body;
+        const { cart, fullname, address, email, city,pincode, modeOfPayment, userId } = req.body;
 
-        // Basic validation
-        if (!fullname || !address || !email || !city || !modeOfPayment ||! pincode ||!userId) {
-            return res.status(400).json({ error: "All fields are required" });
-        }
-
+        
+        const existingOrder = await Order.findOne({ cart_id: cart._id });
         // Create a new order document
-        const order = new Order({
-            fullname,
-            address,
-            email,
-            city,
-            pincode,
-            modeOfPayment,
-            userId
-        });
+        
+        if(!existingOrder){
+            const order = new Order({
+                fullname,
+                address,
+                email,
+                city,
+                picode,
+                modeOfPayment : 'Cash on delivery',
+                userId,
+                cart_id: cart._id
+            });
 
-        // Save the order to the database
-        await order.save();
+            await order.save();
 
-        // Send success response
-        res.status(201).json({ status:'success', message: "Order created successfully", order });
+        }
+        res.status(201).json({ status:'success', message: "Order created successfully" });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Server error" });
     }
     
 }
-
-
 
 let fetchOrderByUserId = async (req,res) =>{
   
@@ -58,4 +56,6 @@ let fetchOrderByUserId = async (req,res) =>{
    
 
 }
+
 module.exports = {orderAdd,fetchOrderByUserId}
+

@@ -17,7 +17,8 @@ function StripePage({fullname,email,address,city, pincode}) {
     fetch('http://localhost:3001/api/cart/fetchCart',{
         method:'POST',
         headers:{
-            'Content-Type':'application/json'
+            'Content-Type':'application/json',
+            'Authorization':localStorage.getItem('userToken'),
         },
         body:JSON.stringify({
             userId:JSON.parse(localStorage.getItem('loggedInUser'))._id
@@ -42,9 +43,17 @@ function StripePage({fullname,email,address,city, pincode}) {
   
     const response = await fetch('http://localhost:3001/api/cart/makePayment', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json',
+        'Authorization':localStorage.getItem('userToken')
+       },
       body: JSON.stringify({ 
-        cart:cart
+        cart,
+        fullname,
+        email,
+        address,
+        city,
+        pincode,
+        userId:JSON.parse(localStorage.getItem('loggedInUser'))._id
 
       }) 
     });

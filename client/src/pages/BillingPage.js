@@ -8,6 +8,8 @@ const BillingPage = () => {
   const [totalPrice,setTotalPrice] = useState(0)
   const [cartItems,setCartItems] = useState([])
   const [paymentMode,setPaymentMode] = useState('cod')
+  const [cart, setCart] = useState({});
+
 
     const [fullname,setFullName] = useState('')
     const [address,setAddress] = useState('')
@@ -22,7 +24,8 @@ const BillingPage = () => {
       fetch('http://localhost:3001/api/cart/fetchCart',{
           method:'POST',
           headers:{
-              'Content-Type':'application/json'
+              'Content-Type':'application/json',
+              'Authorization':localStorage.getItem('userToken'),
           },
           body:JSON.stringify({
               userId:JSON.parse(localStorage.getItem('loggedInUser'))._id
@@ -32,7 +35,7 @@ const BillingPage = () => {
           if(data.status === 'success'){
               setCartItems(data.cart.items);
               setTotalPrice(data.cart.totalPrice);
-             
+              setCart(data.cart)
           }else{
               alert(data.message)
           }
@@ -59,8 +62,8 @@ let handleSubmit=async(e)=>{
             address:address,
             city:city,
             pincode:pincode,
-            userId: JSON.parse(localStorage.getItem('loggedInUser'))
-
+            userId: JSON.parse(localStorage.getItem('loggedInUser')),
+            cart:cart
         })
     });
 

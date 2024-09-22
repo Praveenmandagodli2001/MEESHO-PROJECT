@@ -1,5 +1,8 @@
 let Cart = require('../models/cart');
 let stripe = require('stripe')(process.env.STRIPE_KEY);
+const Order = require('../models/orders');
+
+
 
 let cartAdd = async (req, res) => {
     try {
@@ -141,12 +144,26 @@ let removeFromCart = async (req, res) => {
     }
 };
 
-    let makePayment = async (req,res) =>{
+let makePayment = async (req,res) =>{
+    const { cart, address, email, city, pincode, fullname, userId,modeOfPayment } = req.body;
 
-    const { amount, cart } = req.body; 
-// console.log(amount);
 
     try {
+        const existingOrder = await Order.findOne({ cart_id: cart._id });
+        if (!existingOrder) {
+            let order = new Order({
+                address,
+                email,
+                modeOfPayment: 'stripe',
+                fullname: fullname,
+                city,
+                pincode,
+                userId,
+                cart_id: cart._id
+            })
+
+            await order.save()
+        }
 
         const lineItems = cart.items.map((item)=>({
             price_data:{
