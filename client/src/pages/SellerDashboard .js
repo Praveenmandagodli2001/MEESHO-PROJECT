@@ -1,11 +1,11 @@
-import React,{useState} from "react";
-import {useNavigate} from "react-router-dom"
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"
 import SellerNavbar from "../components/SellerNavbar";
 import FooterSection from "../components/FooterSection";
 
 function SellerDashboard() {
 
-let navigate=useNavigate()
+  let navigate = useNavigate()
 
   const [productTitle, setProductTitle] = useState("");
   const [productCategory, setProductCategory] = useState("");
@@ -20,52 +20,54 @@ let navigate=useNavigate()
   const [productReviews, setproductReviews] = useState();
   const [productGender, setProductGender] = useState("");
   const [productColors, setProductColors] = useState([]);
+  const [stock, setStock] = useState(0);
 
   let handleSubmit = async (e) => {
 
     e.preventDefault();
 
     const formData = {
-        // productId,
-        title: productTitle,
-        category: productCategory,
-        subCategory: productSubCategory,
-        price: productPrice,
-        images: [productImage1, productImage2 , productImage3],
-        rating: productRating,
-        description: productDescription,
-        sizes: productSizes,
-        colors: productColors,
-        reviews:productReviews,
-        gender: productGender,
-        loggedInUser: JSON.parse(localStorage.getItem('loggedInUser'))
+      // productId,
+      title: productTitle,
+      category: productCategory,
+      subCategory: productSubCategory,
+      price: productPrice,
+      images: [productImage1, productImage2, productImage3],
+      rating: productRating,
+      description: productDescription,
+      sizes: productSizes,
+      colors: productColors,
+      reviews: productReviews,
+      gender: productGender,
+      stock: stock,
+      loggedInUser: JSON.parse(localStorage.getItem('loggedInUser'))
     };
 
 
     try {
-        const response = await fetch("http://localhost:3001/api/products/addProduct", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(formData)
-        });
+      const response = await fetch("http://localhost:3001/api/products/addProduct", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
 
-        if (response.ok) {
+      if (response.ok) {
 
-            const data = await response.json();
-            console.log("Product added successfully:", data);
-            alert("product added successfully")
-            navigate("/sellerViewProduct")
+        const data = await response.json();
+        console.log("Product added successfully:", data);
+        alert("product added successfully")
+        navigate("/sellerViewProduct")
 
-        } else {
-            console.error("Failed to add product:", response.statusText);
-            alert("failed to add the product")
-        }
+      } else {
+        console.error("Failed to add product:", response.statusText);
+        alert("failed to add the product")
+      }
     } catch (error) {
-        console.error("Error submitting form:", error);
+      console.error("Error submitting form:", error);
     }
-}
+  }
 
 
 
@@ -79,7 +81,7 @@ let navigate=useNavigate()
           </div>
         </div>
         <div className="card border rounded bg-light  p-4 mb-4 bg-white">
-          <form onSubmit={handleSubmit}> 
+          <form onSubmit={handleSubmit}>
             <div className="mb-3 row">
               <label htmlFor="productTitle" className="col-sm-3 col-form-label">Title</label>
               <div className="col-sm-9">
@@ -89,7 +91,7 @@ let navigate=useNavigate()
                   id="productTitle"
                   placeholder="Enter Product Title"
                   value={productTitle}
-                  onChange={(e)=>setProductTitle(e.target.value)}
+                  onChange={(e) => setProductTitle(e.target.value)}
                 />
               </div>
             </div>
@@ -146,6 +148,15 @@ let navigate=useNavigate()
                   value={productPrice} onChange={(e) => setProductPrice(e.target.value)}
                 />
               </div>
+            </div>
+
+            <div className="mb-3 row">
+              <label for="productStcok" className="col-sm-3 col-form-label"> Stock</label>
+              <div className="col-sm-9">
+                <input type="number" className="form-control" id="stock" placeholder="Enter Product stock"
+                  value={stock} onChange={(e) => setStock(e.target.value)} />
+              </div>
+
             </div>
 
             <div className="mb-3 row">
@@ -216,7 +227,7 @@ let navigate=useNavigate()
             <div className="mb-3 row">
               <label htmlFor="productReviews" className="col-sm-3 col-form-label">Reviews</label>
               <div className="col-sm-9">
-              <input
+                <input
                   type="text"
                   className="form-control"
                   id="productReviews"
@@ -245,8 +256,8 @@ let navigate=useNavigate()
             <div className="mb-3 row">
               <label htmlFor="productSizes" className="col-sm-3 col-form-label">Sizes Available</label>
               <div className="col-sm-9">
-                <select multiple className="form-select" id="productSizes" value={productSizes} 
-                onChange={(e) => setProductSizes([...e.target.selectedOptions].map(option => option.value))}>
+                <select multiple className="form-select" id="productSizes" value={productSizes}
+                  onChange={(e) => setProductSizes([...e.target.selectedOptions].map(option => option.value))}>
                   <option value="S">S</option>
                   <option value="M">M</option>
                   <option value="L">L</option>

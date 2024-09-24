@@ -1,9 +1,6 @@
 import React from 'react'
 import Navbar from '../components/Navbar'
 import bannerPage from "../assets/image/baner.png"
-// import ProductsCard from "../components/ProductsCard"
-// import Sidebar from '../components/Sidebar'
-
 import FooterSection from '../components/FooterSection'
 import ProductSection from '../components/ProductSection'
 const LandingPage = () => {

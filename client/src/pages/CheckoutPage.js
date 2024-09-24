@@ -20,6 +20,9 @@ function CheckoutPage() {
         }).then((res) => res.json())
             .then((data) => {
                 if (data.status === 'success') {
+                    console.log(data.order);
+                    
+                    let cartIds = data.order.map((order)=>order.cart_id)
                     fetch('http://localhost:3001/api/cart/fetchCartById', {
                         method: "POST",
                         headers: {
@@ -27,17 +30,27 @@ function CheckoutPage() {
                             'Authorization':localStorage.getItem('userToken')
                         },
                         body: JSON.stringify({
-                            cartId: data.order.cart_id
+                            cartId: cartIds
                         })
                     }).then((res) => res.json())
                         .then((res) => {
                             if (res.status === 'success') {
-                                setCart(res.cart)
-                                setCartItems(res.cart.items)
+                                // setCart(res.cart)
+                                let items = []
+                                res.cart.forEach((cart) => {
+                                    items=[...items, ...cart.items]
+                                });
+                                setCartItems(items)
                             }
+                            // console.log(cart)
+                            // console.log(cartItems);
+
+
                         }).catch((err) => console.log(err))
                 }
             }).catch((err) => console.log(err))
+
+
     }, [])
     console.log('Authorization Token:', localStorage.getItem('userToken'))
 

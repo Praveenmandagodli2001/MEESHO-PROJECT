@@ -27,6 +27,7 @@ const ProductsCard = ({ product }) => {
             {/* <i className="fa-solid fa-indian-rupee-sign"></i> */}
            Rs {product.price}
             <span style={{ fontSize: "0.6rem", color: "#777", paddingLeft: "4px" }}>onwards</span>
+            {product.stock === 0 ? <p className="btn btn-danger text-light btn-sm rounded-pill">sold out</p>:null }
           </div>
 
           <span

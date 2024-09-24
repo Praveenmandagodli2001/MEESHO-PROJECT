@@ -6,6 +6,7 @@ import FooterSection from '../components/FooterSection';
 const SellerViewProduct = () => {
   let [data, setData] = useState([]);
 
+  // Fetch seller products on component mount
   useEffect(() => {
     fetch('http://localhost:3001/api/products/getProductsOfSeller', {
       method: 'POST',
@@ -19,13 +20,38 @@ const SellerViewProduct = () => {
       .catch((err) => console.log(err));
   }, []);
 
+  // Update stock handler
+  const updateStock = (id, type) => {
+    fetch('http://localhost:3001/api/products/updatingStock', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        productId: id,
+        type
+      })
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.status === 'success') {
+          alert('Stock updated successfully');
+          // Update the product data with the new stock value
+          setData(data.map(item => item._id === res.product._id ? { ...res.product } : item))
+        } else {
+          alert(res.message);
+        }
+      })
+      .catch((err) => console.log(err));
+  };
+
   return (
     <>
       <SellerNavbar1 />
 
       <div className="d-flex flex-wrap justify-content-center">
         {data.map((product) => (
-          <div key={product._id} className="product-card d-flex flex-column p-3 my-4 mx-3" style={{ height: '340px', maxWidth: '250px', maxHeight: '350px' }}>
+          <div key={product._id} className="product-card d-flex flex-column p-3 my-4 mx-3" style={{ height: '450px', maxWidth: '250px', maxHeight: '380px' }}>
             <div className="product h-50">
               <img src={product.images[0]} alt={product.title} className="img-fluid" style={{ height: '100%', objectFit: 'cover' }} />
             </div>
@@ -63,6 +89,12 @@ const SellerViewProduct = () => {
                 {product.reviews} <span className="ps-1">Reviews</span>
               </span>
             </div>
+
+            <div className="text-muted d-flex">
+              {product.stock < 1 ? <p className="btn btn-outline-secondary btn-sm me-2 disabled">-</p> : <p onClick={() => updateStock(product._id, 'decrement')} className="btn btn-outline-secondary btn-sm me-2">-</p>}
+              <p className="me-2">stock : {product.stock}</p>
+              <p onClick={() => updateStock(product._id, 'increment')} className="btn btn-outline-secondary btn-sm">+</p>
+            </div>
           </div>
         ))}
       </div>
@@ -70,6 +102,6 @@ const SellerViewProduct = () => {
       <FooterSection />
     </>
   );
-}
+};
 
 export default SellerViewProduct;

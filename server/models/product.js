@@ -48,6 +48,10 @@ let productSchema = new mongoose.Schema({
     seller_id: {
         type: mongoose.Types.ObjectId,
         required: true
+    },
+    stock: {
+        type: Number,
+        required: true
     }
     
 

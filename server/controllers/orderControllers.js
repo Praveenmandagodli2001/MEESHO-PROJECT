@@ -1,6 +1,8 @@
 
 let Order = require('../models/orders')
 
+let Product = require('../models/product')
+let Cart = require('../models/cart')
 
 let orderAdd = async (req,res) =>{
     try {
@@ -16,16 +18,37 @@ let orderAdd = async (req,res) =>{
                 address,
                 email,
                 city,
-                picode,
+                pincode,
                 modeOfPayment : 'Cash on delivery',
                 userId,
                 cart_id: cart._id
             });
 
             await order.save();
-
         }
-        res.status(201).json({ status:'success', message: "Order created successfully" });
+
+        await Cart.updateOne({_id:cart._id}, {$unset: {userId:1}})
+  
+        let productQuantityMap = {};
+
+        cart.items.forEach(product => {
+            productQuantityMap[product.productId] = product.quantity;
+        });
+
+        // update the quantity of the products in the database
+        for (let i = 0; i <  cart.items.length; i++) {
+            const product = cart.items[i];
+            await Product.findByIdAndUpdate(
+                { _id: product.productId },
+                {
+                    $inc: {
+                        stock: -(productQuantityMap[product.productId])
+                    }
+                },
+                { new: true }
+            );
+        }
+        res.status(201).json({ status:'success', message: "Order created successfully",  });
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Server error" });
@@ -39,7 +62,7 @@ let fetchOrderByUserId = async (req,res) =>{
    
     try {
         let {userId} = req.body
-        let order = await Order.findOne({userId})
+        let order = await Order.find({userId})
         
         
     
@@ -56,6 +79,10 @@ let fetchOrderByUserId = async (req,res) =>{
    
 
 }
+
+
+
+
 
 module.exports = {orderAdd,fetchOrderByUserId}
 

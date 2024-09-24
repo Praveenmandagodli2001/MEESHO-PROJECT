@@ -136,8 +136,10 @@ const ProductDetails = ({ product }) => {
                                     <span style={{ fontSize: '0.6rem', marginLeft: '3px' }}>
                                         <i className="fa-solid fa-star"></i>
                                     </span>
+                                    
                                 </div>
-
+                               <div> <h3 className="btn btn-light btn-sm  rounded-pill">  stock Available: {product.stock}</h3>
+                               </div>
                                 {/* Free Delivery */}
                                 <div className="mt-1">
                                     <span

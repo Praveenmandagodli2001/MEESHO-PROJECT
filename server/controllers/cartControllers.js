@@ -1,6 +1,7 @@
 let Cart = require('../models/cart');
-let stripe = require('stripe')(process.env.STRIPE_KEY);
 const Order = require('../models/orders');
+const mongoose=require("mongoose")
+let stripe = require('stripe')(process.env.STRIPE_KEY);
 
 
 
@@ -14,7 +15,7 @@ let cartAdd = async (req, res) => {
             cart = new Cart({
                 userId,
                 items: [{ productId, quantity, price, size, details: { image: product.images[0], name: product.title } }],
-                totalPrice: quantity * product.price // No delivery charge added here
+                totalPrice: quantity * product.price 
             });
         } else {
             const existingProductIndex = cart.items.findIndex(item => item.productId.toString() === productId && item.size === size);
@@ -24,11 +25,11 @@ let cartAdd = async (req, res) => {
             } else {
                 cart.items.push({ productId, quantity, price, size, details: { image: product.images[0], name: product.title } });
             }
-            // Recalculate the total price without delivery charge
             cart.totalPrice = cart.items.reduce((total, item) => total + (item.price * item.quantity), 0);
         }
 
         await cart.save();
+
         res.send({ status: 'success', message: 'Item added to cart successfully', cart });
     } catch (error) {
         res.send({ status: 'failed', message: error.message });
@@ -51,6 +52,27 @@ let fetchCart = async (req, res) => {
         res.status(500).json({ message: "Failed to fetch cart" });
     }
 };
+
+let fetchCartById = async (req, res) => {
+    try {
+        let { cartId } = req.body;
+        let cart;
+        if(typeof cartId == 'string'){
+             cart = await Cart.findOne({ _id: cartId });
+        }else if (Array.isArray(cartId)){
+            cartId = cartId.map(id => new mongoose.Types.ObjectId(id));
+             cart = await Cart.find({ _id: { $in:cartId } });
+        }
+        if (!cart) {
+            return res.status(404).json({ message: "Cart is empty" });
+        }
+
+        res.status(200).json({ status: 'success', message: 'Cart saved successufully', cart });
+    } catch (error) {
+        console.error('Error fetching cart:', error);
+        res.status(500).json({ message: "Failed to fetch cart" });
+    }
+}
 
 let incrementItem = async (req, res) => {
     try {
@@ -208,21 +230,6 @@ let makePayment = async (req,res) =>{
 }
 
 
-let fetchCartById = async (req, res) => {
-    try {
-        const { cartId } = req.body;
 
-        const cart = await Cart.findOne({ _id: cartId });
-
-        if (!cart) {
-            return res.status(404).json({ message: "Cart is empty" });
-        }
-
-        res.status(200).json({ status: 'success', message: 'Cart saved successufully', cart });
-    } catch (error) {
-        console.error('Error fetching cart:', error);
-        res.status(500).json({ message: "Failed to fetch cart" });
-    }
-}
 
 module.exports = { cartAdd, fetchCart, removeFromCart, decrementItem, incrementItem, makePayment, fetchCartById };
