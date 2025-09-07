@@ -109,7 +109,7 @@ const SignUp = () => {
                     required
                   />
                 </div>
-
+                
                 <button type="submit" className="btn btn-primary w-100" onClick={handleSubmit}>Sign Up</button>
 
                 <div className="sign-up mt-4">
