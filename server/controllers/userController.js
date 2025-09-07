@@ -30,8 +30,6 @@ let login = async (req, res) => {
         if (!user) {
             return res.status(400).json({ status: 'failed', message: 'User not found' });
         }
-        
-
         let isValidPwd = await bcrypt.compare(password, user.password)
         if (!isValidPwd) {
             res.status(400).json({ status: 'failed', message: 'password not valid' })
@@ -40,7 +38,6 @@ let login = async (req, res) => {
             jwt.sign(payload, process.env.KEY, async(err, token) => {
                 if (err) throw err
                 let UserCart = await Cart.findOne({userId:user.id})
-                // user.token = token
                 res.status(201).json({ status: 'success', message: 'Loggedin successfully', user,token, UserCart })
             })
 
@@ -74,26 +71,33 @@ let forgotPassword=async(req,res)=>{
 
         let transporter = nodemailer.createTransport({
             service: 'gmail',
+            secure:false,
             auth: {
-              user: 'praveenmandagodli57@gmail.com',
-              pass: 'vtud laob vkmp wbcr'
+              user: 'praveenmandagodli@gmail.com',
+              pass: 'frvq gsyd ppfq gkzg'
+            },
+            tls:{
+                rejectUnauthorized: false
             }
           });
           
           let mailOptions = {
-            from: 'praveenmandagodli57@gmail.com',
+            from: 'praveenmandagodli@gmail.com',
             to: email,
             subject: 'Reset password',
             text: `http://localhost:3000/resetPassword/${token}`
           };
           
-          transporter.sendMail(mailOptions, function(error, info){
+          transporter.sendMail(mailOptions, function (error, info) {
             if (error) {
-              return res.json({message:"error sending email"})
+                console.log("Full Error: ", error); // Log the full error object
+                return res.status(500).json({ status: false, message: "Error sending email", error: error.message });
             } else {
-                return res.json({ status:true,message:"email sent"})
+                console.log("Email sent: " + info.response);
+                return res.status(200).json({ status: true, message: "Email sent, check your inbox" });
             }
-          });
+        });
+        
 
 
     }catch(err){
